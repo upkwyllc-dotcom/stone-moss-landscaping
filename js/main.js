@@ -120,17 +120,17 @@
   document.querySelector('.testi-wrap').addEventListener('mouseleave', startAuto);
   startAuto();
 
-  // Hero parallax (subtle, transform-only)
-  var heroArt = document.querySelector('.hero-art svg');
+  // Hero scroll parallax (subtle, transform-only, whole illustration)
+  var heroArtSvg = document.querySelector('.hero-art svg');
   var heroSun = document.getElementById('heroSun');
-  if(heroArt && !reduced){
+  if(heroArtSvg && !reduced){
     var ticking = false;
     document.addEventListener('scroll', function(){
       if(!ticking){
         requestAnimationFrame(function(){
           var y = window.scrollY;
           if(y < 900){
-            heroArt.style.transform = 'translateY(' + (y * 0.06) + 'px)';
+            heroArtSvg.style.transform = 'translateY(' + (y * 0.06) + 'px)';
             if(heroSun) heroSun.setAttribute('cy', 120 + y * 0.03);
           }
           ticking = false;
@@ -138,5 +138,73 @@
         ticking = true;
       }
     }, {passive:true});
+  }
+
+  // Hero mouse-parallax: individual illustration layers drift at different
+  // depths as the cursor moves, independent of the scroll transform above.
+  var heroSection = document.querySelector('.hero');
+  var fine = window.matchMedia('(pointer: fine)').matches;
+  var parallaxLayers = [
+    {el: document.getElementById('heroBgCircle'), max: 3},
+    {el: document.getElementById('heroSun'), max: 6},
+    {el: document.getElementById('heroHillBack'), max: 9},
+    {el: document.getElementById('heroHillFront'), max: 13},
+    {el: document.getElementById('heroTreeGroup'), max: 13},
+    {el: document.getElementById('heroContours'), max: 17}
+  ];
+  if(heroSection && fine && !reduced){
+    var px = 0, py = 0, rafPending = false;
+    function applyParallax(){
+      parallaxLayers.forEach(function(l){
+        if(!l.el) return;
+        var tx = (px * l.max).toFixed(2);
+        var ty = (py * l.max * 0.6).toFixed(2);
+        l.el.style.transform = 'translate(' + tx + 'px,' + ty + 'px)';
+      });
+      rafPending = false;
+    }
+    heroSection.addEventListener('mousemove', function(e){
+      var r = heroSection.getBoundingClientRect();
+      px = ((e.clientX - r.left) / r.width - 0.5) * 2;
+      py = ((e.clientY - r.top) / r.height - 0.5) * 2;
+      if(!rafPending){ requestAnimationFrame(applyParallax); rafPending = true; }
+    });
+    heroSection.addEventListener('mouseleave', function(){
+      px = 0; py = 0;
+      requestAnimationFrame(applyParallax);
+    });
+  }
+
+  // Hero time-of-day toggle: click (or Enter/Space via the button) cycles
+  // the illustration through Dawn / Midday / Dusk color moods.
+  var heroArt = document.getElementById('heroArt');
+  var timeToggle = document.getElementById('timeToggle');
+  var timeToggleLabel = document.getElementById('timeToggleLabel');
+  var times = ['dawn', 'midday', 'dusk'];
+  var timeNames = {dawn: 'Dawn', midday: 'Midday', dusk: 'Dusk'};
+  var timeIndex = 0;
+  if(heroArt && timeToggle && timeToggleLabel){
+    timeToggle.addEventListener('click', function(){
+      timeIndex = (timeIndex + 1) % times.length;
+      var t = times[timeIndex];
+      heroArt.setAttribute('data-time', t);
+      timeToggleLabel.textContent = timeNames[t];
+      timeToggle.setAttribute('aria-label', "Change the illustration's light. Currently " + timeNames[t] + '.');
+    });
+  }
+
+  // Magnetic hero CTA buttons: nudge toward the cursor within a small radius.
+  if(fine && !reduced){
+    document.querySelectorAll('.hero-ctas .btn').forEach(function(btn){
+      btn.addEventListener('mousemove', function(e){
+        var r = btn.getBoundingClientRect();
+        var relX = e.clientX - r.left - r.width / 2;
+        var relY = e.clientY - r.top - r.height / 2;
+        btn.style.transform = 'translate(' + (relX * 0.16).toFixed(2) + 'px,' + (relY * 0.28 - 2).toFixed(2) + 'px)';
+      });
+      btn.addEventListener('mouseleave', function(){
+        btn.style.transform = '';
+      });
+    });
   }
 })();

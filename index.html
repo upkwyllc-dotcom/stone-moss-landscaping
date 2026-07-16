@@ -67,31 +67,35 @@
       </div>
     </div>
 
-    <div class="hero-art" aria-hidden="true">
-      <svg viewBox="0 0 480 480" fill="none">
-        <circle cx="240" cy="240" r="238" fill="#F0E8D9"/>
-        <g id="heroContours" stroke="#22331C" stroke-width="1" opacity="0.5" fill="none">
+    <div class="hero-art" id="heroArt" data-time="dawn">
+      <svg viewBox="0 0 480 480" fill="none" aria-hidden="true">
+        <circle cx="240" cy="240" r="238" id="heroBgCircle"/>
+        <g id="heroContours" stroke-width="1" opacity="0.5" fill="none">
           <path d="M60 300 C 140 250, 200 340, 280 290 S 420 250, 440 300" />
           <path d="M40 320 C 130 270, 210 360, 290 310 S 430 270, 450 320" />
           <path d="M20 340 C 120 290, 220 380, 300 330 S 440 290, 460 340" />
           <path d="M10 360 C 110 310, 230 400, 310 350 S 445 310, 465 360" />
         </g>
-        <path d="M110 300 C 150 160, 330 160, 370 300 Z" fill="#7C8A63" opacity="0.55"/>
-        <path d="M150 300 C 180 210, 300 210, 330 300 Z" fill="#22331C" opacity="0.85"/>
-        <circle cx="330" cy="120" r="34" fill="#C6A05C" id="heroSun"/>
-        <g stroke="#141F10" stroke-width="1.4" stroke-linecap="round">
+        <path d="M110 300 C 150 160, 330 160, 370 300 Z" id="heroHillBack" opacity="0.55"/>
+        <path d="M150 300 C 180 210, 300 210, 330 300 Z" id="heroHillFront" opacity="0.85"/>
+        <circle cx="330" cy="120" r="34" id="heroSun"/>
+        <g id="heroTreeGroup" stroke-width="1.4" stroke-linecap="round">
           <path d="M240 300 V 210"/>
           <path d="M240 240 L 210 210"/>
           <path d="M240 255 L 268 228"/>
         </g>
       </svg>
+      <button type="button" class="time-toggle" id="timeToggle" aria-label="Change the illustration's light. Currently Dawn.">
+        <span class="time-toggle-dot" aria-hidden="true"></span>
+        <span id="timeToggleLabel">Dawn</span>
+      </button>
       <div class="float-badge">
         <p class="lbl">Certified Arboriculture</p>
         <p>Every planting plan reviewed by an ISA-certified arborist before ground is broken.</p>
       </div>
     </div>
   </div>
-  <div class="scroll-cue" aria-hidden="true"><span style="font-size:11px;letter-spacing:0.1em;text-transform:uppercase">Scroll</span><span class="line"></span></div>
+  <a href="#services" class="scroll-cue" aria-label="Scroll to next section"><span style="font-size:11px;letter-spacing:0.1em;text-transform:uppercase">Scroll</span><span class="line"></span></a>
 </header>
 
 <!-- ================= STATS STRIP ================= -->
