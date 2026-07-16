@@ -2,7 +2,8 @@
 
 A premium, single-page marketing site concept for a high-end landscape architecture studio. Built as a static HTML/CSS/JS site — no build step, no framework, no dependencies.
 
-**Live design reference:** [Artifact preview](https://claude.ai/code/artifact/2ea9985a-6deb-4657-9de4-911244d08440)
+**Live site:** [stoneandmoss.netlify.app](https://stoneandmoss.netlify.app)
+**Design reference:** [Artifact preview](https://claude.ai/code/artifact/2ea9985a-6deb-4657-9de4-911244d08440)
 
 ## Stack
 
