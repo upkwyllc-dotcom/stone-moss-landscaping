@@ -7,14 +7,31 @@
   // Nav scroll state
   var nav = document.getElementById('siteNav');
   var toTop = document.getElementById('toTop');
+  var footerInView = false;
   function onScroll(){
     var y = window.scrollY;
     if(y > 40){ nav.classList.add('scrolled'); } else { nav.classList.remove('scrolled'); }
-    if(y > 800){ toTop.classList.add('show'); } else { toTop.classList.remove('show'); }
+    if(y > 800 && !footerInView){ toTop.classList.add('show'); } else { toTop.classList.remove('show'); }
   }
   document.addEventListener('scroll', onScroll, {passive:true});
   onScroll();
   toTop.addEventListener('click', function(){ window.scrollTo({top:0, behavior: reduced ? 'auto' : 'smooth'}); });
+
+  // Hide the back-to-top button once the CTA band or footer scroll into
+  // view so it never sits on top of the consultation button or footer text.
+  var noFabZones = document.querySelectorAll('.cta-band, footer');
+  if(noFabZones.length && 'IntersectionObserver' in window){
+    var intersectingZones = new Set();
+    var fabIo = new IntersectionObserver(function(entries){
+      entries.forEach(function(entry){
+        if(entry.isIntersecting){ intersectingZones.add(entry.target); }
+        else { intersectingZones.delete(entry.target); }
+      });
+      footerInView = intersectingZones.size > 0;
+      onScroll();
+    }, {rootMargin: '0px 0px -40% 0px'});
+    noFabZones.forEach(function(el){ fabIo.observe(el); });
+  }
 
   // Mobile menu
   var menuBtn = document.getElementById('menuBtn');
